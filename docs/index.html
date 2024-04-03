@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA/SGPA Calculator</title>
+    <link rel="icon" href="CSC.png" type="image/png">
+    <style>
+
+
+/* Existing styles for SGPA form and other elements */
+body {
+    background-color: black;
+    color: white;
+    font-family: 'San Francisco', Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 90vh;
+    margin-top: 25px;
+}
+
+        .logo {
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .form-section {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+        .input-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.input-container label,
+.input-container input {
+    flex: 1;
+    margin-right: 10px;
+}
+
+#sgpaForm, #cgpaForm {
+    max-height: 600px;
+    width: 70%;
+    overflow-y: auto;
+    background-color: rgba(10, 10, 10, 0.7);
+    border-radius: 20px;
+    padding: 20px;
+
+    /* Styling for the scrollbar */
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: rgb(27, 27, 27) black; /* For Firefox */
+}
+
+#sgpaForm::-webkit-scrollbar, #cgpaForm::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+#sgpaForm::-webkit-scrollbar-track, #cgpaForm::-webkit-scrollbar-track {
+    background: transparent; /* Background color of the scrollbar track */
+}
+
+#sgpaForm::-webkit-scrollbar-thumb, #cgpaForm::-webkit-scrollbar-thumb {
+    background-color: rgb(22, 22, 22); /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners for the scrollbar thumb */
+    border: 2px solid black; /* Border around the scrollbar thumb */
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.input-container label {
+    flex: 1;
+    margin-right: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #0f0f0f;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+
+.input-container input {
+    flex: 1;
+    margin-right: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #0f0f0f;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.input-container input[type="number"] {
+    width: 20px; /* Adjust as needed */
+}
+
+.button {
+    background-color: #F07C00;
+    color: black;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: darkorange;
+}
+
+.submit-button {
+    background-color: purple;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: rgb(48, 1, 48) ;
+}
+/* Modal styles */
+/* Modal styles */
+.modal, .modal2 {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 400px;
+    /* height: 100px; */
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* Black background with transparency */
+    color: white;
+}
+
+.modal-content, .modal-content2 {
+    background-color: #000000;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 200px;
+    height: 100px;
+    border-radius: 10px;
+    text-align: center;
+    animation-name: modal-animation;
+    animation-duration: 1s;
+    margin: 0 auto;
+}
+
+/* @keyframes modal-animation {
+    from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+} */
+
+
+/* Close button style */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+.footer {
+    background-color: rgb(36, 1, 53);
+ 
+    color: white;
+    height: 10%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer p {
+    margin-right: 10px;
+}
+
+.footer img {
+    height: 30px; /* Adjust as needed */
+    width: 30px; /* Adjust as needed */
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="Logo.svg" alt="Logo" class="logo">
+        <p>This is an student made website made to calculate Semester SGPA/CGPA only for students of KIT's College Of Engineering</p>
+        <div class="buttons">
+            <button class="button" onclick="showForm('sgpa')">Calculate SGPA</button>
+            <button class="button" onclick="showForm('cgpa')">Calculate CGPA</button>
+        </div>
+        <div id="sgpaForm" class="form-section">
+            <form id="sgpaCalcForm">
+                <p>Enter all subjects & Labs Credits and Grade Points</p>
+                <div class="input-container">
+                    <label for="sub1-credits">Sub1: Credits</label>
+                    <input type="number" id="sub1-credits" name="sub1-credits" min="0" max="10">
+                    <label for="sub1-grade">Grade Points</label>
+                    <input type="number" id="sub1-grade" name="sub1-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub2-credits">Sub2: Credits</label>
+                    <input type="number" id="sub2-credits" name="sub2-credits" min="0" max="10">
+                    <label for="sub2-grade">Grade Points</label>
+                    <input type="number" id="sub2-grade" name="sub2-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub3-credits">Sub3: Credits</label>
+                    <input type="number" id="sub3-credits" name="sub3-credits" min="0" max="10">
+                    <label for="sub3-grade">Grade Points</label>
+                    <input type="number" id="sub3-grade" name="sub3-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub4-credits">Sub4: Credits</label>
+                    <input type="number" id="sub4-credits" name="sub4-credits" min="0" max="10">
+                    <label for="sub4-grade">Grade Points</label>
+                    <input type="number" id="sub4-grade" name="sub4-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub5-credits">Sub5: Credits</label>
+                    <input type="number" id="sub5-credits" name="sub5-credits" min="0" max="10">
+                    <label for="sub5-grade">Grade Points</label>
+                    <input type="number" id="sub5-grade" name="sub5-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub6-credits">Sub6: Credits</label>
+                    <input type="number" id="sub6-credits" name="sub6-credits" min="0" max="10">
+                    <label for="sub6-grade">Grade Points</label>
+                    <input type="number" id="sub6-grade" name="sub6-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub7-credits">Sub7: Credits</label>
+                    <input type="number" id="sub7-credits" name="sub7-credits" min="0" max="10">
+                    <label for="sub7-grade">Grade Points</label>
+                    <input type="number" id="sub7-grade" name="sub7-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub8-credits">Sub8: Credits</label>
+                    <input type="number" id="sub8-credits" name="sub8-credits" min="0" max="10">
+                    <label for="sub8-grade">Grade Points</label>
+                    <input type="number" id="sub8-grade" name="sub8-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub9-credits">Sub9: Credits</label>
+                    <input type="number" id="sub9-credits" name="sub9-credits" min="0" max="10">
+                    <label for="sub9-grade">Grade Points</label>
+                    <input type="number" id="sub9-grade" name="sub9-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub10-credits">Sub10: Credits</label>
+                    <input type="number" id="sub10-credits" name="sub10-credits" min="0" max="10">
+                    <label for="sub10-grade">Grade Points</label>
+                    <input type="number" id="sub10-grade" name="sub10-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub11-credits">Sub11: Credits</label>
+                    <input type="number" id="sub11-credits" name="sub11-credits" min="0" max="10">
+                    <label for="sub11-grade">Grade Points</label>
+                    <input type="number" id="sub11-grade" name="sub11-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub12-credits">Sub12: Credits</label>
+                    <input type="number" id="sub12-credits" name="sub12-credits" min="0" max="10">
+                    <label for="sub12-grade">Grade Points</label>
+                    <input type="number" id="sub12-grade" name="sub12-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub13-credits">Sub13: Credits</label>
+                    <input type="number" id="sub13-credits" name="sub13-credits" min="0" max="10">
+                    <label for="sub13-grade">Grade Points</label>
+                    <input type="number" id="sub13-grade" name="sub13-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub14-credits">Sub14: Credits</label>
+                    <input type="number" id="sub14-credits" name="sub14-credits" min="0" max="10">
+                    <label for="sub14-grade">Grade Points</label>
+                    <input type="number" id="sub14-grade" name="sub14-grade" min="1" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sub15-credits">Sub15: Credits</label>
+                    <input type="number" id="sub15-credits" name="sub15-credits" min="0" max="10">
+                    <label for="sub15-grade">Grade Points</label>
+                    <input type="number" id="sub15-grade" name="sub15-grade" min="1" max="10">
+                </div><br><br>
+        
+                <button type="button" onclick="calculateSGPA()" class="submit-button">Submit</button>
+
+            </form>
+        </div>
+        
+        
+        <div id="cgpaForm" class="form-section">
+            <p>Enter all known SGPA of Each Semester</p>
+            <form id="cgpaCalcForm">
+                <div class="input-container">
+                    <label for="sem1-sgpa">Enter Semester 1 SGPA:</label>
+                    <input type="number" id="sem1-sgpa" name="sem1-sgpa" min="0" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sem2-sgpa">Enter Semester 2 SGPA:</label>
+                    <input type="number" id="sem2-sgpa" name="sem2-sgpa" min="0" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sem3-sgpa">Enter Semester 3 SGPA:</label>
+                    <input type="number" id="sem3-sgpa" name="sem3-sgpa" min="0" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sem4-sgpa">Enter Semester 4 SGPA:</label>
+                    <input type="number" id="sem4-sgpa" name="sem4-sgpa" min="0" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sem5-sgpa">Enter Semester 5 SGPA:</label>
+                    <input type="number" id="sem5-sgpa" name="sem5-sgpa" min="0" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sem6-sgpa">Enter Semester 6 SGPA:</label>
+                    <input type="number" id="sem6-sgpa" name="sem6-sgpa" min="0" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sem7-sgpa">Enter Semester 7 SGPA:</label>
+                    <input type="number" id="sem7-sgpa" name="sem7-sgpa" min="0" max="10">
+                </div><br><br>
+        
+                <div class="input-container">
+                    <label for="sem8-sgpa">Enter Semester 8 SGPA:</label>
+                    <input type="number" id="sem8-sgpa" name="sem8-sgpa" min="0" max="10">
+                </div><br><br>
+        
+                <button type="button" onclick="calculateCGPA()" class="submit-button">Submit</button>
+            </form>
+        </div>
+    
+        
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Your SGPA is:</h2>
+            <p id="sgpaResult"></p>
+        </div>
+    </div>
+
+    <!-- Your existing modal structure for displaying SGPA -->
+    <div id="modal2" class="modal2">
+        <div class="modal-content2">
+            <span class="close" onclick="closeModal2()">&times;</span>
+            <h2>Your CGPA is:</h2>
+            <p id="cgpaResult"></p> <!-- Fixed ID here -->
+        </div>
+    </div>
+    <footer class="footer">
+        <p>Made by Atharva Patil (@kaabil.engineer)</p>
+        <a href="https://www.instagram.com/kaabil.engineer"><img src="instagram.png" alt="Instagram Icon"></a>
+    </footer>
+    
+
+    <script>
+        function showForm(type) {
+            if (type === 'sgpa') {
+                document.getElementById('sgpaForm').classList.add('active');
+                document.getElementById('cgpaForm').classList.remove('active');
+            } else {
+                document.getElementById('cgpaForm').classList.add('active');
+                document.getElementById('sgpaForm').classList.remove('active');
+            }
+        }
+
+        function calculateSGPA() {
+    let totalCredits = 0;
+    let totalGradePoints = 0;
+
+    // Loop through each input container and calculate total credits and grade points
+    for (let i = 1; i <= 15; i++) {
+        const credits = parseFloat(document.getElementById(`sub${i}-credits`).value);
+        const grade = parseFloat(document.getElementById(`sub${i}-grade`).value);
+        
+        // Check if both credits and grade are valid numbers
+        if (!isNaN(credits) && !isNaN(grade)) {
+            totalCredits += credits;
+            totalGradePoints += credits * grade;
+        }
+    }
+
+    // Calculate SGPA
+    const sgpa = (totalGradePoints / totalCredits) ;
+
+    // Display SGPA in a pop-up box format
+    const modal = document.getElementById("modal");
+    const sgpaResult = document.getElementById("sgpaResult");
+    sgpaResult.innerHTML = sgpa.toFixed(2);
+    modal.style.display = "block";
+}
+
+
+function calculateCGPA() {
+    let totalSGPA = 0;
+
+    let numberOfSemesters = 0; // Variable to count the number of semesters entered
+
+for (let i = 1; i <= 8; i++) {
+    const sgpa = parseFloat(document.getElementById(`sem${i}-sgpa`).value);
+
+    // Check if SGPA is a valid number
+    if (!isNaN(sgpa)) {
+        totalSGPA += sgpa;
+        numberOfSemesters++; // Increment the count of semesters
+    }
+}
+
+// Check if any SGPA values were entered
+if (numberOfSemesters > 0) {
+    // Calculate CGPA
+    const cgpa = totalSGPA / numberOfSemesters;
+
+    // Display CGPA in modal
+    const modal = document.getElementById("modal2");
+    const cgpaResult = document.getElementById("cgpaResult"); // Fixed ID here
+    cgpaResult.innerHTML = cgpa.toFixed(2); // Fixed variable name here
+    modal.style.display = "block";
+} else {
+    // Display error message or handle empty input case
+    console.log("No SGPA values entered");
+}
+
+    // // Display CGPA in modal
+    // const modal = document.getElementById("modal2");
+    // const cgpaResult = document.getElementById("cgpaResult"); // Fixed ID here
+    // cgpaResult.innerHTML = cgpa.toFixed(2); // Fixed variable name here
+    // modal.style.display = "block";
+}
+function closeModal() {
+    const modal = document.getElementById("modal");
+    modal.style.display = "none";
+}
+function closeModal2() {
+    const modal2 = document.getElementById("modal2"); // Fixed variable name here
+    modal2.style.display = "none"; // Fixed variable name here
+}
+    </script>
+</body>
+
+</html>
